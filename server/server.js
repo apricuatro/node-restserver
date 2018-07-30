@@ -1,4 +1,6 @@
 const express = require('express');
+const mongoose = require('mongoose');
+
 const app = express();
 const bodyparser = require('body-parser');
 require('./config/config');
@@ -7,24 +9,11 @@ app.use(bodyparser.urlencoded({ extended: false }))
 
 app.use(bodyparser.json())
 
-app.get('/usuario', (req, res) => {
-    res.json('get Usuario');
-});
+app.use(require('./routes/usuario.js'));
 
-app.post('/usuario', (req, res) => {
-    let persona = req.body;
-    res.json({ persona });
-});
-
-app.put('/usuario/:id', (req, res) => {
-    let id = req.params.id;
-    res.json({
-        id
-    });
-});
-
-app.delete('/usuario', (req, res) => {
-    res.json('delete Usuario');
+mongoose.connect(process.env.dicmongo, (err, res) => {
+    if (err) throw err;
+    console.log("base de datos escuchando");
 });
 
 app.listen(process.env.PORT, () => {
